@@ -3,28 +3,107 @@ import Edit from './pages/Edit'
 import Home from './pages/Home'
 import New from './pages/New'
 import NotFound from './pages/NotFound'
-import Button from './components/Button'
-import Header from './components/Header'
-import { Route,Routes } from 'react-router-dom'
-import { getEmotionImage } from './util/getEmotionImage'
+import { Route, Routes } from 'react-router-dom'
+import { useReducer, useRef, useState, createContext, useEffect } from 'react'
 import './App.css'
+
+const mockData = [
+  {
+    id: 1,
+    createDate: new Date().getTime(),
+    emotionId: 1,
+    content: '1번일기 내용'
+  },
+  {
+    id: 2,
+    createDate: new Date().getTime(),
+    emotionId: 3,
+    content: '2번일기 내용'
+  }
+]
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'INIT':
+      return action.data
+    case 'CREATE':
+      return [action.data, ...state]
+
+    case 'UPDATE':
+      return state.map((item) =>
+        String(item.id) === String(action.data.id) ? action.data : item)
+
+    case 'DELETE':
+      return state.filter(
+        (item) => String(item.id) !== String(action.id)
+      )
+
+    default:
+      return state
+  }
+}
+
+export const DairyStateContext = createContext()
+export const DailyDispatchContext = createContext()
 
 function App() {
 
+  const [data, dispatch] = useReducer(reducer, mockData)
+  const idRef = useRef(3)
+  const [isDataLoaded, setIsDataLoaded] = useState(false)
+
+  useEffect(() => {
+    dispatch({
+      type: 'INIT',
+      data: mockData
+    })
+    setIsDataLoaded(true)
+  }, [])
+
+  const onCreate = (createdDate, emotionId, content) => {
+    dispatch({
+      type: 'CREATE',
+      data: {
+        id: idRef.current++,
+        createdDate,
+        emotionId,
+        content
+      }
+    })
+  }
+  const onUpDate = (id, createdDate, emotionId, content) => {
+    dispatch({
+      type: 'UPDATE',
+      data: {
+        id,
+        createdDate,
+        emotionId,
+        content
+      }
+    })
+  }
+
+  const onDelete = (id) => {
+    dispatch({
+      type: 'DELETE',
+      id
+    })
+  }
+
+  if (!isDataLoaded) return <div>로딩중</div>
   return (
     <div>
-      <Header 
-      title = 'Header123'
-      leftChild={<Button text='left'/>}
-      rightChild={<Button text ='right'/>}
-      />
-    <Routes>
-      <Route path='/' element ={<Home/>}/>
-      <Route path='/new' element ={<New/>}/>
-      <Route path='/edit/:id' element ={<Edit/>}/>
-      <Route path='/daily/:id' element ={<Diary/>}/>
-      <Route path='*' element ={<NotFound/>}/>
-    </Routes>
+      <DairyStateContext.Provider value={data}>
+        <DailyDispatchContext.Provider value={{ onCreate, onUpDate, onDelete }}>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/new' element={<New />} />
+            <Route path='/edit/:id' element={<Edit />} />
+            <Route path='/daily/:id' element={<Diary />} />
+            <Route path='*' element={<NotFound />} />
+          </Routes>
+        </DailyDispatchContext.Provider>
+      </DairyStateContext.Provider>
     </div>
   )
 }
