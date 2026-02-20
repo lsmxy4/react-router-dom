@@ -1,6 +1,7 @@
 .DiaryItem{
     display: flex;
     align-items: center;
+    margin-bottom: 12px; 
     gap: 15px;
     border-bottom: 1px solid #eee;
 }
