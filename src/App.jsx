@@ -10,15 +10,21 @@ import './App.css'
 const mockData = [
   {
     id: 1,
-    createDate: new Date().getTime(),
+    createdDate: new Date('2026-02-15').getTime(),
     emotionId: 1,
     content: '1번일기 내용'
   },
   {
     id: 2,
-    createDate: new Date().getTime(),
+    createdDate: new Date('2026-02-10').getTime(),
     emotionId: 3,
     content: '2번일기 내용'
+  },
+  {
+    id: 3,
+    createdDate: new Date('2026-01-16').getTime(),
+    emotionId: 3,
+    content: '3번일기 내용'
   }
 ]
 
@@ -43,13 +49,13 @@ function reducer(state, action) {
   }
 }
 
-export const DairyStateContext = createContext()
-export const DailyDispatchContext = createContext()
+export const DiaryStateContext = createContext()
+export const DiaryDispatchContext = createContext()
 
 function App() {
 
   const [data, dispatch] = useReducer(reducer, mockData)
-  const idRef = useRef(3)
+  const idRef = useRef(4)
   const [isDataLoaded, setIsDataLoaded] = useState(false)
 
   useEffect(() => {
@@ -93,8 +99,8 @@ function App() {
   if (!isDataLoaded) return <div>로딩중</div>
   return (
     <div>
-      <DairyStateContext.Provider value={data}>
-        <DailyDispatchContext.Provider value={{ onCreate, onUpDate, onDelete }}>
+      <DiaryStateContext.Provider value={data}>
+        <DiaryDispatchContext.Provider value={{ onCreate, onUpDate, onDelete }}>
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/new' element={<New />} />
@@ -102,8 +108,8 @@ function App() {
             <Route path='/daily/:id' element={<Diary />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
-        </DailyDispatchContext.Provider>
-      </DairyStateContext.Provider>
+        </DiaryDispatchContext.Provider>
+      </DiaryStateContext.Provider>
     </div>
   )
 }
