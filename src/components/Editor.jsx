@@ -4,15 +4,8 @@ import './Editor.css'
 import Button from './Button'
 import EmotionItme from './EmotionItme'
 import { useNavigate } from 'react-router-dom'
-
-const emotionList = [
-    {emotionId:1,emotionName:'완전 좋음'},
-    {emotionId:2,emotionName:'좋음'},
-    {emotionId:3,emotionName:'보통'},
-    {emotionId:4,emotionName:'나쁨'},
-    {emotionId:5,emotionName:'완전 나쁨'},
-]
-
+import {getStringedDate} from '../util/getStringedDate'
+import {emotionList} from '../util/constants'
 
 const Editor = ({onSumit}) => {
     const nav = useNavigate()
@@ -23,19 +16,19 @@ const Editor = ({onSumit}) => {
         content:''
     })
 
-    const onChangeInput = (e) =>{
-        let name = e.target.name
-        let value = e.target.value
+    const onChangeInput = (e)=>{
+    let name = e.target.name
+    let value = e.target.value
 
-        if(name === 'createDate'){
-            value = new Date(value)
-        }
-
-        setInput({
-            ...input,
-            [name]:value
-        })
+    if(name ==='createdDate'){
+      value =new Date(value)
     }
+
+    setInput({
+      ...input,
+      [name]:value
+    })
+  }
 
     const onSumitButtonClick =()=>{
         onSumit(input)
@@ -46,7 +39,8 @@ const Editor = ({onSumit}) => {
         <section className='date-section'>
             <h4>오늘의 날자</h4>
             <input type="date" name='createdDate'
-            onChange={onChangeInput}/>
+            onChange={onChangeInput}
+            value={getStringedDate(input.createdDate)}/>
         </section>
             <h4>오늘의 감정</h4>
         <section className='emotion-section'>
