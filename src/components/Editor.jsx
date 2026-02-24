@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import './Editor.css'
 import Button from './Button'
 import EmotionItme from './EmotionItme'
@@ -7,7 +7,8 @@ import { useNavigate } from 'react-router-dom'
 import {getStringedDate} from '../util/getStringedDate'
 import {emotionList} from '../util/constants'
 
-const Editor = ({onSumit}) => {
+const Editor = ({initData,onSubmit}) => {
+    
     const nav = useNavigate()
     
     const [input,setInput] = useState({
@@ -15,6 +16,15 @@ const Editor = ({onSumit}) => {
         emotionId:3,
         content:''
     })
+
+    useEffect(()=>{
+        if(initData){
+            setInput({
+                ...initData,
+                createdDate:new Date(Number(initData.createdDate))
+            })
+        }
+    },[initData])
 
     const onChangeInput = (e)=>{
     let name = e.target.name
@@ -31,7 +41,7 @@ const Editor = ({onSumit}) => {
   }
 
     const onSumitButtonClick =()=>{
-        onSumit(input)
+        onSubmit(input)
     }
 
     return (

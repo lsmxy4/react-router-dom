@@ -10,7 +10,7 @@ const New = () => {
   const nav = useNavigate()
   const {onCreate} = useContext(DiaryDispatchContext)
 
-  const onSumit =(input)=>{
+  const onSubmit =(input)=>{
     onCreate(
       input.createdDate.getTime(),
       input.emotionId,
@@ -25,7 +25,7 @@ const New = () => {
       title={'새 일기 쓰기'}
       leftChild={<Button text={"뒤로가기"}
       onClick={() => nav(-1)}/>}/>
-      <Editor onSumit={onSumit}/>
+      <Editor onSubmit={onSubmit}/>
     </div>
   )
 }
