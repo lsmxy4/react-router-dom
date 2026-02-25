@@ -11,22 +11,22 @@
 
 .EmotionItem.item_on_1{
      color: white;
-    background-color: rgb(100, 201, 100);
+    background-color: #F5D96C;
 }
 .EmotionItem.item_on_2{
     color: white;
-    background-color: rgb(157, 215, 114);
+    background-color: #BCE5D3;
 }
 .EmotionItem.item_on_3{
     color: white;
-    background-color: rgb(253, 206, 23);
+    background-color: #F2CD99;
 }
 
 .EmotionItem.item_on_4{
     color: white;
-    background-color: rgb(253, 132, 70);
+    background-color: #F6976C;
 }
 .EmotionItem.item_on_5{
   color: white;
-    background-color: rgb(253, 86, 95);
+    background-color: #F7BEAB;
 }
