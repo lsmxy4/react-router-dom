@@ -3,10 +3,13 @@ import Header from '../components/Header'
 import Button from '../components/Button'
 import DiaryList from '../components/DiaryList'
 import {DiaryStateContext} from '../App'
+import useDiary from '../hooks/useDiary'
 
 const Home = () => {
   const data = useContext(DiaryStateContext)
   const [pivotDate,setPivotDate] = useState(new Date())
+
+  useDiary('감정일기장 home')
 
   const onIncreamentMonth=()=>{
     setPivotDate(

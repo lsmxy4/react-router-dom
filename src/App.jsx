@@ -7,46 +7,30 @@ import { Route, Routes } from 'react-router-dom'
 import { useReducer, useRef, useState, createContext, useEffect } from 'react'
 import './App.css'
 
-const mockData = [
-  {
-    id: 1,
-    createdDate: new Date('2026-02-15').getTime(),
-    emotionId: 1,
-    content: '1번일기 내용'
-  },
-  {
-    id: 2,
-    createdDate: new Date('2026-02-10').getTime(),
-    emotionId: 3,
-    content: '2번일기 내용'
-  },
-  {
-    id: 3,
-    createdDate: new Date('2026-01-16').getTime(),
-    emotionId: 3,
-    content: '3번일기 내용'
-  }
-]
-
 function reducer(state, action) {
+  let nextState;
   switch (action.type) {
-    case 'INIT':
+    case 'INIT':  
       return action.data
     case 'CREATE':
-      return [action.data, ...state]
-
+      nextState = [action.data, ...state]
+      break;
     case 'UPDATE':
-      return state.map((item) =>
+      nextState = state.map((item) =>
         String(item.id) === String(action.data.id) ? action.data : item)
-
+        break;
     case 'DELETE':
-      return state.filter(
+      nextState = state.filter(
         (item) => String(item.id) !== String(action.id)
       )
+      break;
 
     default:
       return state
   }
+
+  localStorage.setItem('diary',JSON.stringify(nextState))
+  return nextState
 }
 
 export const DiaryStateContext = createContext()
@@ -54,16 +38,52 @@ export const DiaryDispatchContext = createContext()
 
 function App() {
 
-  const [data, dispatch] = useReducer(reducer, mockData)
-  const idRef = useRef(4)
-  const [isDataLoaded, setIsDataLoaded] = useState(false)
+  const [data, dispatch] = useReducer(reducer, [])
+  const idRef = useRef(0)
+  const [isDataLoaded, setIsDataLoaded] = useState(true)
 
   useEffect(() => {
+    const storagedData = localStorage.getItem("diary")
+
+    if(!storagedData){
+      localStorage.getItem('diary',JSON.stringify([]))
+      setIsDataLoaded(false)
+
+      return
+    }
+
+    let parsed = []
+
+    try{
+      parsed = JSON.parse(storagedData)
+    }catch(error){
+      localStorage.setItem('diary',JSON.stringify([]))
+      return
+    }
+
+    if(!Array.isArray(parsed)){
+      setIsDataLoaded(false)
+      return
+    }
+
+    let maxId = 0
+    
+    parsed.forEach((item)=>{
+      if(Number(item.id) > maxId){
+        maxId = item.id
+      }
+    })
+
+    idRef.current = maxId + 1
+
+
+
+
     dispatch({
       type: 'INIT',
-      data: mockData
+      data: parsed
     })
-    setIsDataLoaded(true)
+    setIsDataLoaded(false)
   }, [])
 
   const onCreate = (createdDate, emotionId, content) => {
@@ -96,7 +116,7 @@ function App() {
     })
   }
 
-  if (!isDataLoaded) return <div>로딩중</div>
+  if (isDataLoaded) return <div>로딩중</div>
   return (
     <div>
       <DiaryStateContext.Provider value={data}>
