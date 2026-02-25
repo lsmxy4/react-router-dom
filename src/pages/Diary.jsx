@@ -4,7 +4,7 @@
   import Button from '../components/Button'
   import Viewer from '../components/Viewer'
   import { getStringedDate } from '../util/getStringedDate' 
-  import useDiary from '../hooks/useDiary'
+  import useTitle from '../hooks/useTitle'
 
   const Diary = () => {
       const {id} = useParams()
