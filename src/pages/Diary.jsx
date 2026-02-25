@@ -12,6 +12,8 @@
 
        const curDiaryItem = useDiary()
 
+       useTitle('감정일기장 Diary')
+
   if (!curDiaryItem) {
     return <div>로딩중...</div>
   }

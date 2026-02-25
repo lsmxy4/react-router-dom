@@ -4,6 +4,7 @@ import Header from '../components/Header'
 import Button from '../components/Button'
 import Editor from '../components/Editor'
 import { DiaryDispatchContext,DiaryStateContext } from '../App'
+import useTitle from '../hooks/useTitle'
 
 const Edit = () => {
     const {id} = useParams()
@@ -11,6 +12,8 @@ const Edit = () => {
     const {onDelete,onUpDate} = useContext(DiaryDispatchContext)
     const data = useContext(DiaryStateContext)
     const [curDiaryItem,setCurDiaryItem] = useState(null)
+
+    useTitle('감정일기장 Edit')
 
     useEffect(() => {
       const currentItem = data.find(
